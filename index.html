@@ -799,9 +799,15 @@
         if (selectedDistrict && rowDistrict !== selectedDistrict) {
           return false;
         }
-        if (selectedService && rowService !== selectedService) {
-          return false;
-        }
+	if (selectedService) {
+  		const serviceLower = rowService.toLowerCase();
+  		if (selectedService === "Free" && !serviceLower.includes("free")) {
+    		return false;
+  	}
+  	if (selectedService === "Paid" && !serviceLower.includes("paid")) {
+    		return false;
+  	}
+	}
         return true;
       });
 
