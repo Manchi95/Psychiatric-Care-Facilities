@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sri Lanka Hospitals Directory - Add Facility</title>
+  <title>Sri Lanka Hospitals Directory</title>
   <style>
     :root {
       --bg: #121212;
@@ -15,11 +15,9 @@
       --accent-hover: #0d9488;
       --input-bg: #0f172a;
     }
-
     * { box-sizing: border-box; }
-
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: system-ui, -apple-system, sans-serif;
       max-width: 720px;
       margin: 40px auto;
       padding: 0 20px 60px;
@@ -27,50 +25,39 @@
       color: var(--text);
       line-height: 1.5;
     }
-
     h1 {
       margin-bottom: 6px;
-      alieng-center
-      font-size: 1.8rem;
-      font-weight: 700;
+      font-size: 2.2rem;
+      text-align: center;
     }
-
     .subtitle {
       color: var(--muted);
       margin-bottom: 32px;
+      text-align: center;
     }
-
     .card {
       background: var(--card);
       border-radius: 16px;
       padding: 32px;
       border: 1px solid var(--border);
     }
-
     .section-title {
       margin: 36px 0 8px;
       font-size: 1.15rem;
       font-weight: 700;
       color: var(--accent);
     }
-
-    .section-title:first-child {
-      margin-top: 0;
-    }
-
+    .section-title:first-child { margin-top: 0; }
     .optional-note {
       font-size: 0.9rem;
       color: var(--muted);
       margin-bottom: 16px;
     }
-
     label {
       display: block;
       font-weight: 600;
       margin: 18px 0 7px;
-      font-size: 0.95rem;
     }
-
     input, select, textarea {
       width: 100%;
       padding: 12px 14px;
@@ -80,24 +67,20 @@
       color: var(--text);
       font-size: 15px;
     }
-
     input:focus, select:focus, textarea:focus {
       outline: none;
       border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
     }
-
     textarea {
       min-height: 90px;
       resize: vertical;
     }
-
     .hint {
       font-size: 0.85rem;
       color: var(--muted);
       margin-top: 5px;
     }
-
     button {
       margin-top: 32px;
       width: 100%;
@@ -109,19 +92,13 @@
       font-size: 16px;
       font-weight: 700;
       cursor: pointer;
-      transition: background 0.2s;
     }
-
-    button:hover {
-      background: var(--accent-hover);
-    }
-
+    button:hover { background: var(--accent-hover); }
     button:disabled {
       background: #475569;
       color: #94a3b8;
       cursor: not-allowed;
     }
-
     #status {
       margin-top: 20px;
       padding: 14px;
@@ -129,19 +106,16 @@
       display: none;
       font-weight: 500;
     }
-
     .success {
       background: #064e3b;
       color: #6ee7b7;
       border: 1px solid #059669;
     }
-
     .error {
       background: #450a0a;
       color: #fca5a5;
       border: 1px solid #dc2626;
     }
-
     .disclaimer {
       margin-top: 24px;
       padding: 16px;
@@ -150,19 +124,17 @@
       border-radius: 8px;
       font-size: 0.875rem;
       color: var(--muted);
-      line-height: 1.55;
     }
   </style>
 </head>
 <body>
 
   <h1>Sri Lanka Hospitals Directory</h1>
-  <p class="subtitle">Add a public hospital / medical facility (data is saved to CSV)</p>
+  <p class="subtitle">Add a public hospital / medical facility</p>
 
   <div class="card">
     <form id="hospitalForm">
 
-      <!-- Basic Info -->
       <div class="section-title">Facility Information</div>
 
       <label>Facility / Hospital Name *</label>
@@ -171,102 +143,71 @@
       <label>Province *</label>
       <select id="province" required>
         <option value="">Select Province</option>
-        <option>Western</option>
-        <option>Central</option>
-        <option>Southern</option>
-        <option>Northern</option>
-        <option>Eastern</option>
-        <option>North Western</option>
-        <option>North Central</option>
-        <option>Uva</option>
-        <option>Sabaragamuwa</option>
+        <option value="Western">Western</option>
+        <option value="Central">Central</option>
+        <option value="Southern">Southern</option>
+        <option value="Northern">Northern</option>
+        <option value="Eastern">Eastern</option>
+        <option value="North Western">North Western</option>
+        <option value="North Central">North Central</option>
+        <option value="Uva">Uva</option>
+        <option value="Sabaragamuwa">Sabaragamuwa</option>
       </select>
 
       <label>District *</label>
       <select id="district" required>
         <option value="">Select District</option>
-        <option>Colombo</option>
-        <option>Gampaha</option>
-        <option>Kalutara</option>
-        <option>Kandy</option>
-        <option>Matale</option>
-        <option>Nuwara Eliya</option>
-        <option>Galle</option>
-        <option>Matara</option>
-        <option>Hambantota</option>
-        <option>Jaffna</option>
-        <option>Kilinochchi</option>
-        <option>Mannar</option>
-        <option>Vavuniya</option>
-        <option>Mullaitivu</option>
-        <option>Batticaloa</option>
-        <option>Ampara</option>
-        <option>Trincomalee</option>
-        <option>Kurunegala</option>
-        <option>Puttalam</option>
-        <option>Anuradhapura</option>
-        <option>Polonnaruwa</option>
-        <option>Badulla</option>
-        <option>Monaragala</option>
-        <option>Ratnapura</option>
-        <option>Kegalle</option>
       </select>
 
       <label>City / Town *</label>
       <input type="text" id="city" required>
 
-      <!-- Contacts -->
       <div class="section-title">Contact Information</div>
-      <p class="optional-note">
-        At least <strong>one</strong> of Primary Phone, Email or Website is required.
-      </p>
+      <p class="optional-note">At least <strong>one</strong> of Primary Phone, Email or Website is required.</p>
 
       <label>Primary Contact Number</label>
-      <input type="text" id="primaryPhone" placeholder="e.g. 0112691111">
+      <input type="text" id="primaryPhone" placeholder="0112691111" maxlength="10">
+      <div class="hint">Must start with 0 and be exactly 10 digits</div>
 
       <label>Secondary Contact Number (Optional)</label>
-      <input type="text" id="secondaryPhone" placeholder="Optional">
+      <input type="text" id="secondaryPhone" placeholder="Optional" maxlength="10">
 
       <label>Email</label>
-      <input type="email" id="email" placeholder="e.g. info@hospital.lk">
+      <input type="email" id="email" placeholder="info@hospital.lk">
 
       <label>Website</label>
-      <input type="url" id="website" placeholder="e.g. https://www.hospital.lk">
+      <input type="text" id="website" placeholder="www.hospital.lk">
+      <div class="hint">Just type starting with www (no https:// needed)</div>
 
       <label>Address</label>
       <textarea id="address" placeholder="Full address"></textarea>
 
-      <!-- Services & Doctors -->
       <div class="section-title">Services & Doctors</div>
 
       <label>Services Provided *</label>
-      <textarea id="services" required placeholder="e.g. Emergency, OPD, Cardiology, Maternity, ICU, Laboratory..."></textarea>
-      <div class="hint">List the main services available at this facility</div>
+      <textarea id="services" required placeholder="Emergency, OPD, Cardiology, Maternity..."></textarea>
 
       <label>Available Doctors (Optional)</label>
-      <textarea id="doctors" placeholder="e.g. Dr. A. Perera (Cardiologist), Dr. S. Fernando (Pediatrician)..."></textarea>
+      <textarea id="doctors" placeholder="Dr. Name (Specialty)"></textarea>
 
       <label>Additional Notes (Optional)</label>
-      <textarea id="notes" placeholder="Any other public information"></textarea>
+      <textarea id="notes"></textarea>
 
-      <!-- Optional Submitter Details -->
       <div class="section-title">Your Details (Optional)</div>
-      <p class="optional-note">
-        Providing your personal details is completely optional.
-      </p>
+      <p class="optional-note">Completely optional</p>
 
       <label>Your Name</label>
-      <input type="text" id="submitterName" placeholder="Optional">
+      <input type="text" id="submitterName">
 
       <label>Your Contact Number</label>
-      <input type="text" id="submitterPhone" placeholder="Optional">
+      <input type="text" id="submitterPhone" maxlength="10">
 
       <label>Your Email</label>
-      <input type="email" id="submitterEmail" placeholder="Optional">
+      <input type="email" id="submitterEmail">
 
       <div class="disclaimer">
-        <strong>Please note:</strong> All information submitted through this form (including any personal details you choose to provide) will be publicly available to everyone. 
-        We do not take any responsibility for the accuracy of the data or for any consequences arising from its use or publication.
+        <strong>Please note:</strong> All information submitted (including any personal details) will be publicly available. 
+        We do not take responsibility for the accuracy of the data.
       </div>
 
       <button type="submit" id="submitBtn">Submit Facility</button>
@@ -276,13 +217,108 @@
   </div>
 
   <script>
-    // ============ CONFIGURE THESE THREE VALUES ============
+    // ========== CONFIGURE THESE ==========
     const GITHUB_USERNAME = "YOUR_USERNAME";
     const REPO_NAME       = "YOUR_REPO";
-    const TOKEN           = "YOUR_FINE_GRAINED_TOKEN";   // Contents: Read and write
-    // ======================================================
+    const TOKEN           = "YOUR_TOKEN";
+    // =====================================
 
     const CSV_PATH = "data/hospitals.csv";
+
+    // Province → Districts
+    const provinceDistricts = {
+      "Western": ["Colombo", "Gampaha", "Kalutara"],
+      "Central": ["Kandy", "Matale", "Nuwara Eliya"],
+      "Southern": ["Galle", "Matara", "Hambantota"],
+      "Northern": ["Jaffna", "Kilinochchi", "Mannar", "Vavuniya", "Mullaitivu"],
+      "Eastern": ["Batticaloa", "Ampara", "Trincomalee"],
+      "North Western": ["Kurunegala", "Puttalam"],
+      "North Central": ["Anuradhapura", "Polonnaruwa"],
+      "Uva": ["Badulla", "Monaragala"],
+      "Sabaragamuwa": ["Ratnapura", "Kegalle"]
+    };
+
+    // District → Province (reverse)
+    const districtToProvince = {};
+    for (const [province, districts] of Object.entries(provinceDistricts)) {
+      districts.forEach(d => {
+        districtToProvince[d] = province;
+      });
+    }
+
+    const provinceSelect = document.getElementById("province");
+    const districtSelect = document.getElementById("district");
+
+    // Fill all districts at the beginning
+    function populateAllDistricts() {
+      districtSelect.innerHTML = '<option value="">Select District</option>';
+      const allDistricts = Object.values(provinceDistricts).flat().sort();
+      allDistricts.forEach(district => {
+        const option = document.createElement("option");
+        option.value = district;
+        option.textContent = district;
+        districtSelect.appendChild(option);
+      });
+    }
+
+    // Filter districts when province changes
+    provinceSelect.addEventListener("change", function () {
+      const selectedProvince = this.value;
+      const currentDistrict = districtSelect.value;
+
+      districtSelect.innerHTML = '<option value="">Select District</option>';
+
+      if (selectedProvince && provinceDistricts[selectedProvince]) {
+        provinceDistricts[selectedProvince].forEach(district => {
+          const option = document.createElement("option");
+          option.value = district;
+          option.textContent = district;
+          districtSelect.appendChild(option);
+        });
+
+        // Keep the district if it still belongs to the new province
+        if (currentDistrict && provinceDistricts[selectedProvince].includes(currentDistrict)) {
+          districtSelect.value = currentDistrict;
+        }
+      } else {
+        // If no province selected, show all districts again
+        populateAllDistricts();
+      }
+    });
+
+    // When district changes → auto select correct province
+    districtSelect.addEventListener("change", function () {
+      const selectedDistrict = this.value;
+      if (selectedDistrict && districtToProvince[selectedDistrict]) {
+        provinceSelect.value = districtToProvince[selectedDistrict];
+
+        // Also filter the district list to match the province
+        const correctProvince = districtToProvince[selectedDistrict];
+        districtSelect.innerHTML = '<option value="">Select District</option>';
+        provinceDistricts[correctProvince].forEach(district => {
+          const option = document.createElement("option");
+          option.value = district;
+          option.textContent = district;
+          districtSelect.appendChild(option);
+        });
+        districtSelect.value = selectedDistrict;
+      }
+    });
+
+    // Initial load - show all districts
+    populateAllDistricts();
+
+    // Validation
+    function isValidPhone(phone) {
+      if (!phone) return true;
+      return /^0\d{9}$/.test(phone);
+    }
+
+    function isValidEmail(email) {
+      if (!email) return true;
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
     const form = document.getElementById("hospitalForm");
     const statusEl = document.getElementById("status");
     const submitBtn = document.getElementById("submitBtn");
@@ -290,15 +326,37 @@
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      // Validation: at least one contact method required
       const primaryPhone = document.getElementById("primaryPhone").value.trim();
+      const secondaryPhone = document.getElementById("secondaryPhone").value.trim();
       const email = document.getElementById("email").value.trim();
       const website = document.getElementById("website").value.trim();
+      const submitterPhone = document.getElementById("submitterPhone").value.trim();
+      const submitterEmail = document.getElementById("submitterEmail").value.trim();
 
       if (!primaryPhone && !email && !website) {
-        statusEl.className = "error";
-        statusEl.style.display = "block";
-        statusEl.textContent = "Please provide at least one contact method: Primary Phone, Email, or Website.";
+        showError("Please provide at least one contact method: Primary Phone, Email, or Website.");
+        return;
+      }
+
+      if (primaryPhone && !isValidPhone(primaryPhone)) {
+        showError("Primary Phone must start with 0 and be exactly 10 digits.");
+        return;
+      }
+      if (secondaryPhone && !isValidPhone(secondaryPhone)) {
+        showError("Secondary Phone must start with 0 and be exactly 10 digits.");
+        return;
+      }
+      if (submitterPhone && !isValidPhone(submitterPhone)) {
+        showError("Your Contact Number must start with 0 and be exactly 10 digits.");
+        return;
+      }
+
+      if (email && !isValidEmail(email)) {
+        showError("Please enter a valid Email address.");
+        return;
+      }
+      if (submitterEmail && !isValidEmail(submitterEmail)) {
+        showError("Please enter a valid Email in Your Details.");
         return;
       }
 
@@ -307,7 +365,6 @@
       statusEl.style.display = "none";
 
       try {
-        // 1. Get current file
         const getRes = await fetch(
           https://api.github.com/repos/\( {GITHUB_USERNAME}/ \){REPO_NAME}/contents/${CSV_PATH},
           {
@@ -318,24 +375,22 @@
           }
         );
 
-        if (!getRes.ok) throw new Error("Could not read the CSV file. Check path and token permissions.");
+        if (!getRes.ok) throw new Error("Could not read the CSV file. Check username, repo name and token.");
 
         const fileData = await getRes.json();
         const currentContent = atob(fileData.content);
         const sha = fileData.sha;
 
-        // Helper to safely escape CSV values
         const esc = (val) => "${(val || "").replace(/"/g, '""')}";
-
-        // 2. Prepare new row
         const now = new Date().toISOString();
+
         const row = [
           esc(document.getElementById("name").value),
           esc(document.getElementById("province").value),
           esc(document.getElementById("district").value),
           esc(document.getElementById("city").value),
           esc(primaryPhone),
-          esc(document.getElementById("secondaryPhone").value),
+          esc(secondaryPhone),
           esc(email),
           esc(website),
           esc(document.getElementById("address").value),
@@ -343,14 +398,13 @@
           esc(document.getElementById("doctors").value),
           esc(document.getElementById("notes").value),
           esc(document.getElementById("submitterName").value),
-          esc(document.getElementById("submitterPhone").value),
-          esc(document.getElementById("submitterEmail").value),
+          esc(submitterPhone),
+          esc(submitterEmail),
           esc(now)
         ].join(",");
 
         const newContent = currentContent.trim() + "\n" + row;
 
-        // 3. Commit the updated file
         const putRes = await fetch(
           https://api.github.com/repos/\( {GITHUB_USERNAME}/ \){REPO_NAME}/contents/${CSV_PATH},
           {
@@ -373,21 +427,25 @@
           throw new Error(err.message || "Failed to update file");
         }
 
-        // Success
         statusEl.className = "success";
         statusEl.style.display = "block";
         statusEl.textContent = "Facility added successfully!";
         form.reset();
+        populateAllDistricts();
 
       } catch (err) {
-        statusEl.className = "error";
-        statusEl.style.display = "block";
-        statusEl.textContent = "Error: " + err.message;
+        showError("Error: " + err.message);
       } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = "Submit Facility";
       }
     });
+
+    function showError(msg) {
+      statusEl.className = "error";
+      statusEl.style.display = "block";
+      statusEl.textContent = msg;
+    }
   </script>
 </body>
 </html>
