@@ -15,49 +15,91 @@
       --accent-hover: #0d9488;
       --input-bg: #0f172a;
     }
-    * { box-sizing: border-box; }
+
+    body.light {
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --border: #cbd5e1;
+      --text: #1e293b;
+      --muted: #64748b;
+      --accent: #0d9488;
+      --accent-hover: #0f766e;
+      --input-bg: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: system-ui, -apple-system, sans-serif;
-      max-width: 720px;
-      margin: 40px auto;
-      padding: 0 20px 60px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.5;
+      padding: 20px 16px 60px;
+      transition: background 0.3s, color 0.3s;
     }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
     h1 {
-      margin-bottom: 6px;
-      font-size: 2.2rem;
+      font-size: 1.9rem;
       text-align: center;
+      margin-bottom: 6px;
     }
+
     .subtitle {
       color: var(--muted);
-      margin-bottom: 32px;
       text-align: center;
+      margin-bottom: 24px;
+      font-size: 0.95rem;
     }
+
+    .theme-toggle {
+      text-align: right;
+      margin-bottom: 16px;
+    }
+
+    .theme-toggle button {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
     .card {
       background: var(--card);
       border-radius: 16px;
-      padding: 32px;
+      padding: 24px 20px;
       border: 1px solid var(--border);
     }
+
     .section-title {
-      margin: 36px 0 8px;
-      font-size: 1.15rem;
+      margin: 28px 0 8px;
+      font-size: 1.1rem;
       font-weight: 700;
       color: var(--accent);
     }
+
     .section-title:first-child { margin-top: 0; }
+
     .optional-note {
       font-size: 0.9rem;
       color: var(--muted);
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
+
     label {
       display: block;
       font-weight: 600;
-      margin: 18px 0 7px;
+      margin: 16px 0 6px;
+      font-size: 0.95rem;
     }
+
     input, select, textarea {
       width: 100%;
       padding: 12px 14px;
@@ -67,164 +109,234 @@
       color: var(--text);
       font-size: 15px;
     }
+
     input:focus, select:focus, textarea:focus {
       outline: none;
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
     }
+
     textarea {
       min-height: 90px;
       resize: vertical;
     }
+
     .hint {
       font-size: 0.85rem;
       color: var(--muted);
-      margin-top: 5px;
+      margin-top: 4px;
     }
-    button {
-      margin-top: 32px;
+
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 22px;
+      font-size: 1.2rem;
+      color: red;
+    }
+
+    .checkbox-group input {
+      width: auto;
+      margin-top: 6px;
+    }
+
+    button[type="submit"],
+    #clearBtn {
       width: 100%;
-      padding: 15px;
-      background: var(--accent);
-      color: #0f172a;
+      padding: 14px;
       border: none;
       border-radius: 10px;
       font-size: 16px;
       font-weight: 700;
       cursor: pointer;
+      margin-top: 12px;
     }
-    button:hover { background: var(--accent-hover); }
-    button:disabled {
+
+    button[type="submit"] {
+      background: var(--accent);
+      color: #0f172a;
+      margin-top: 28px;
+    }
+
+    button[type="submit"]:hover {
+      background: var(--accent-hover);
+    }
+
+    #clearBtn {
       background: #475569;
-      color: #94a3b8;
-      cursor: not-allowed;
+      color: white;
     }
+
     #status {
-      margin-top: 20px;
+      margin-top: 18px;
       padding: 14px;
       border-radius: 10px;
       display: none;
       font-weight: 500;
     }
+
     .success {
       background: #064e3b;
       color: #6ee7b7;
       border: 1px solid #059669;
     }
+
     .error {
       background: #450a0a;
       color: #fca5a5;
       border: 1px solid #dc2626;
     }
+
     .disclaimer {
-      margin-top: 24px;
-      padding: 16px;
-      background: #0f172a;
+      margin-top: 20px;
+      padding: 14px;
+      background: var(--input-bg);
       border-left: 4px solid #64748b;
       border-radius: 8px;
-      font-size: 0.875rem;
-      color: var(--muted);
+      font-size: 1.1rem;
+      color: #E0115F;
+    }
+
+    /* Mobile improvements */
+    @media (max-width: 600px) {
+      h1 { font-size: 1.6rem; }
+      .card { padding: 20px 16px; }
+      body { padding: 16px 12px 50px; }
     }
   </style>
 </head>
 <body>
 
-  <h1>Sri Lanka Hospitals Directory</h1>
-  <p class="subtitle">Add a public hospital / medical facility</p>
+  <div class="container">
+    <div class="theme-toggle">
+      <button type="button" id="themeBtn">Switch to Light Mode</button>
+    </div>
 
-  <div class="card">
-    <form id="hospitalForm">
+    <h1>Sri Lanka Hospitals Directory</h1>
+    <p class="subtitle">Add a public hospital / medical facility</p>
 
-      <div class="section-title">Facility Information</div>
+    <div class="card">
+      <form id="hospitalForm">
 
-      <label>Facility / Hospital Name *</label>
-      <input type="text" id="name" required placeholder="e.g. National Hospital of Sri Lanka">
+        <div class="section-title">Facility Information</div>
 
-      <label>Province *</label>
+        <label>Facility / Hospital Name *</label>
+        <input type="text" id="name" required placeholder="e.g. National Hospital of Sri Lanka">
+
+        <label>Province *</label>
       <select id="province" required>
         <option value="">Select Province</option>
-        <option value="Western">Western</option>
-        <option value="Central">Central</option>
-        <option value="Southern">Southern</option>
-        <option value="Northern">Northern</option>
-        <option value="Eastern">Eastern</option>
-        <option value="North Western">North Western</option>
-        <option value="North Central">North Central</option>
-        <option value="Uva">Uva</option>
-        <option value="Sabaragamuwa">Sabaragamuwa</option>
+        <option value="Western">Western Province</option>
+        <option value="Central">Central Province</option>
+        <option value="Southern">Southern Province</option>
+        <option value="Northern">Northern Province</option>
+        <option value="Eastern">Eastern Province</option>
+        <option value="North Western">North Western Province</option>
+        <option value="North Central">North Central Province</option>
+        <option value="Uva">Uva Province</option>
+        <option value="Sabaragamuwa">Sabaragamuwa Province</option>
       </select>
 
-      <label>District *</label>
-      <select id="district" required>
-        <option value="">Select District</option>
-      </select>
+        <label>District *</label>
+        <select id="district" required>
+          <option value="">Select District</option>
+        </select>
 
-      <label>City / Town *</label>
-      <input type="text" id="city" required>
+        <label>City / Town *</label>
+        <input type="text" id="city" required>
 
-      <div class="section-title">Contact Information</div>
-      <p class="optional-note">At least <strong>one</strong> of Primary Phone, Email or Website is required.</p>
+        <label>Service Type *</label>
+        <select id="serviceType" required>
+          <option value="">Select Type</option>
+          <option value="Free">Free</option>
+          <option value="Paid">Paid</option>
+        </select>
 
-      <label>Primary Contact Number</label>
-      <input type="text" id="primaryPhone" placeholder="0112691111" maxlength="10">
-      <div class="hint">Must start with 0 and be exactly 10 digits</div>
+        <div class="section-title">Contact Information</div>
+        <p class="optional-note">At least <strong>one</strong> of Primary Phone, Email or Website is required.</p>
 
-      <label>Secondary Contact Number (Optional)</label>
-      <input type="text" id="secondaryPhone" placeholder="Optional" maxlength="10">
+        <label>Primary Contact Number</label>
+        <input type="text" id="primaryPhone" placeholder="0112691111" maxlength="10">
+        <div class="hint">Must start with 0 and be exactly 10 digits</div>
 
-      <label>Email</label>
-      <input type="email" id="email" placeholder="info@hospital.lk">
+        <label>Secondary Contact Number (Optional)</label>
+        <input type="text" id="secondaryPhone" placeholder="Optional" maxlength="10">
 
-      <label>Website</label>
-      <input type="text" id="website" placeholder="www.hospital.lk">
-      <div class="hint">Just type starting with www (no https:// needed)</div>
+        <label>Email</label>
+        <input type="email" id="email" placeholder="info@hospital.lk">
 
-      <label>Address</label>
-      <textarea id="address" placeholder="Full address"></textarea>
+        <label>Website</label>
+        <input type="text" id="website" placeholder="www.hospital.lk">
+        <div class="hint">Just type starting with www (no https:// needed)</div>
 
-      <div class="section-title">Services & Doctors</div>
+        <label>Address</label>
+        <textarea id="address" placeholder="Full address"></textarea>
 
-      <label>Services Provided *</label>
-      <textarea id="services" required placeholder="Emergency, OPD, Cardiology, Maternity..."></textarea>
+        <div class="section-title">Services & Doctors</div>
 
-      <label>Available Doctors (Optional)</label>
-      <textarea id="doctors" placeholder="Dr. Name (Specialty)"></textarea>
+        <label>Services Provided *</label>
+        <textarea id="services" required placeholder="Emergency, OPD, Cardiology, Maternity..."></textarea>
 
-      <label>Additional Notes (Optional)</label>
-      <textarea id="notes"></textarea>
+        <label>Available Doctors (Optional)</label>
+        <textarea id="doctors" placeholder="Dr. Name (Specialty)"></textarea>
 
-      <div class="section-title">Your Details (Optional)</div>
-      <p class="optional-note">Completely optional</p>
+        <label>Additional Notes (Optional)</label>
+        <textarea id="notes"></textarea>
 
-      <label>Your Name</label>
-      <input type="text" id="submitterName">
+        <div class="section-title">Your Details (Optional)</div>
+        <p class="optional-note">Completely optional</p>
 
-      <label>Your Contact Number</label>
-      <input type="text" id="submitterPhone" maxlength="10">
+        <label>Your Name</label>
+        <input type="text" id="submitterName">
 
-      <label>Your Email</label>
-      <input type="email" id="submitterEmail">
+        <label>Your Contact Number</label>
+        <input type="text" id="submitterPhone" maxlength="10">
 
-      <div class="disclaimer">
-        <strong>Please note:</strong> All information submitted (including any personal details) will be publicly available. 
-        We do not take responsibility for the accuracy of the data.
-      </div>
+        <label>Your Email</label>
+        <input type="email" id="submitterEmail">
 
-      <button type="submit" id="submitBtn">Submit Facility</button>
-    </form>
+        <div class="disclaimer">
+          <strong>Please note:</strong> All information submitted (including any personal details) will be publicly available. 
+          We do not take responsibility for the accuracy of the data.
+        </div>
 
-    <div id="status"></div>
+        <!-- Checkbox only needed when user fills personal details -->
+        <div class="checkbox-group" id="agreeBox" style="display: none;">
+          <input type="checkbox" id="agreeCheck">
+          <label for="agreeCheck" style="margin: 0; font-weight: normal;">
+            I understand that the details I entered above will be publicly available.
+          </label>
+        </div>
+
+        <button type="button" id="clearBtn">Clear All Fields</button>
+        <button type="submit" id="submitBtn">Submit Facility</button>
+      </form>
+
+      <div id="status"></div>
+    </div>
   </div>
 
   <script>
     // ========== CONFIGURE THESE ==========
-    const GITHUB_USERNAME = "YOUR_USERNAME";
-    const REPO_NAME       = "YOUR_REPO";
-    const TOKEN           = "YOUR_TOKEN";
+    const GITHUB_USERNAME = "manchi95";
+    const REPO_NAME       = "Psychiatric-Care-Facilities";
+    const TOKEN           = "YOUR_TOKEN_HERE";
     // =====================================
 
     const CSV_PATH = "data/hospitals.csv";
 
+    // Theme Toggle
+    const themeBtn = document.getElementById("themeBtn");
+    themeBtn.onclick = function() {
+      document.body.classList.toggle("light");
+      if (document.body.classList.contains("light")) {
+        themeBtn.textContent = "Switch to Dark Mode";
+      } else {
+        themeBtn.textContent = "Switch to Light Mode";
+      }
+    };
+
+    // Province & District
     // Province → Districts
     const provinceDistricts = {
       "Western": ["Colombo", "Gampaha", "Kalutara"],
@@ -308,7 +420,26 @@
     // Initial load - show all districts
     populateAllDistricts();
 
-    // Validation
+    // Show/Hide agreement checkbox based on Your Details
+    const nameInput = document.getElementById("submitterName");
+    const phoneInput = document.getElementById("submitterPhone");
+    const emailInput = document.getElementById("submitterEmail");
+    const agreeBox = document.getElementById("agreeBox");
+
+    function checkPersonalDetails() {
+      if (nameInput.value.trim() || phoneInput.value.trim() || emailInput.value.trim()) {
+        agreeBox.style.display = "flex";
+      } else {
+        agreeBox.style.display = "none";
+        document.getElementById("agreeCheck").checked = false;
+      }
+    }
+
+    nameInput.oninput = checkPersonalDetails;
+    phoneInput.oninput = checkPersonalDetails;
+    emailInput.oninput = checkPersonalDetails;
+
+    // Validation helpers
     function isValidPhone(phone) {
       if (!phone) return true;
       return /^0\d{9}$/.test(phone);
@@ -323,7 +454,7 @@
     const statusEl = document.getElementById("status");
     const submitBtn = document.getElementById("submitBtn");
 
-    form.addEventListener("submit", async (e) => {
+    form.onsubmit = async function(e) {
       e.preventDefault();
 
       const primaryPhone = document.getElementById("primaryPhone").value.trim();
@@ -332,6 +463,12 @@
       const website = document.getElementById("website").value.trim();
       const submitterPhone = document.getElementById("submitterPhone").value.trim();
       const submitterEmail = document.getElementById("submitterEmail").value.trim();
+
+      // Personal details agreement check
+      if (agreeBox.style.display === "flex" && !document.getElementById("agreeCheck").checked) {
+        showError("Please tick the agreement box since you entered personal details.");
+        return;
+      }
 
       if (!primaryPhone && !email && !website) {
         showError("Please provide at least one contact method: Primary Phone, Email, or Website.");
@@ -365,15 +502,12 @@
       statusEl.style.display = "none";
 
       try {
-        const getRes = await fetch(
-          `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${CSV_PATH}`,
-          {
-            headers: {
-              Authorization: 'Bearer ${TOKEN}',
-              Accept: "application/vnd.github+json"
-            }
+        const getRes = await fetch("https://api.github.com/repos/" + GITHUB_USERNAME + "/" + REPO_NAME + "/contents/" + CSV_PATH, {
+          headers: {
+            "Authorization": "Bearer " + TOKEN,
+            "Accept": "application/vnd.github+json"
           }
-        );
+        });
 
         if (!getRes.ok) throw new Error("Could not read the CSV file. Check username, repo name and token.");
 
@@ -381,7 +515,10 @@
         const currentContent = atob(fileData.content);
         const sha = fileData.sha;
 
-        const esc = (val) => `"${(val || "").replace(/"/g, '""')}"`;
+        function esc(val) {
+          return '"' + (val || "").replace(/"/g, '""') + '"';
+        }
+
         const now = new Date().toISOString();
 
         const row = [
@@ -389,6 +526,7 @@
           esc(document.getElementById("province").value),
           esc(document.getElementById("district").value),
           esc(document.getElementById("city").value),
+          esc(document.getElementById("serviceType").value),
           esc(primaryPhone),
           esc(secondaryPhone),
           esc(email),
@@ -405,22 +543,19 @@
 
         const newContent = currentContent.trim() + "\n" + row;
 
-        const putRes = await fetch(
-          `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${CSV_PATH}`,
-          {
-            method: "PUT",
-            headers: {
-              Authorization: 'Bearer ${TOKEN}',
-              Accept: "application/vnd.github+json",
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              message: 'Add facility: ${document.getElementById("name").value}',
-              content: btoa(unescape(encodeURIComponent(newContent))),
-              sha: sha
-            })
-          }
-        );
+        const putRes = await fetch("https://api.github.com/repos/" + GITHUB_USERNAME + "/" + REPO_NAME + "/contents/" + CSV_PATH, {
+          method: "PUT",
+          headers: {
+            "Authorization": "Bearer " + TOKEN,
+            "Accept": "application/vnd.github+json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            message: "Add facility: " + document.getElementById("name").value,
+            content: btoa(unescape(encodeURIComponent(newContent))),
+            sha: sha
+          })
+        });
 
         if (!putRes.ok) {
           const err = await putRes.json();
@@ -431,7 +566,8 @@
         statusEl.style.display = "block";
         statusEl.textContent = "Facility added successfully!";
         form.reset();
-        populateAllDistricts();
+        districtSelect.innerHTML = '<option value="">Select District</option>';
+        agreeBox.style.display = "none";
 
       } catch (err) {
         showError("Error: " + err.message);
@@ -439,13 +575,21 @@
         submitBtn.disabled = false;
         submitBtn.textContent = "Submit Facility";
       }
-    });
+    };
 
     function showError(msg) {
       statusEl.className = "error";
       statusEl.style.display = "block";
       statusEl.textContent = msg;
     }
+
+    // Clear button
+    document.getElementById("clearBtn").onclick = function() {
+      form.reset();
+      districtSelect.innerHTML = '<option value="">Select District</option>';
+      agreeBox.style.display = "none";
+      statusEl.style.display = "none";
+    };
   </script>
 </body>
 </html>
