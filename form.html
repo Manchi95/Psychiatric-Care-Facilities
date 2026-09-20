@@ -366,10 +366,10 @@
 
       try {
         const getRes = await fetch(
-          https://api.github.com/repos/\( {GITHUB_USERNAME}/ \){REPO_NAME}/contents/${CSV_PATH},
+          `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${CSV_PATH}`,
           {
             headers: {
-              Authorization: Bearer ${TOKEN},
+              Authorization: 'Bearer ${TOKEN}',
               Accept: "application/vnd.github+json"
             }
           }
@@ -381,7 +381,7 @@
         const currentContent = atob(fileData.content);
         const sha = fileData.sha;
 
-        const esc = (val) => "${(val || "").replace(/"/g, '""')}";
+        const esc = (val) => `"${(val || "").replace(/"/g, '""')}"`;
         const now = new Date().toISOString();
 
         const row = [
@@ -406,16 +406,16 @@
         const newContent = currentContent.trim() + "\n" + row;
 
         const putRes = await fetch(
-          https://api.github.com/repos/\( {GITHUB_USERNAME}/ \){REPO_NAME}/contents/${CSV_PATH},
+          `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${CSV_PATH}`,
           {
             method: "PUT",
             headers: {
-              Authorization: Bearer ${TOKEN},
+              Authorization: 'Bearer ${TOKEN}',
               Accept: "application/vnd.github+json",
               "Content-Type": "application/json"
             },
             body: JSON.stringify({
-              message: Add facility: ${document.getElementById("name").value},
+              message: 'Add facility: ${document.getElementById("name").value}',
               content: btoa(unescape(encodeURIComponent(newContent))),
               sha: sha
             })
