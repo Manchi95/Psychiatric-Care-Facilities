@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sri Lanka Hospitals Directory - Add Facility</title>
+  <style>
+    :root {
+      --bg: #121212;
+      --card: #1e293b;
+      --border: #334155;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #14b8a6;
+      --accent-hover: #0d9488;
+      --input-bg: #0f172a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 0 20px 60px;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    h1 {
+      margin-bottom: 6px;
+      alieng-center
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 32px;
+      border: 1px solid var(--border);
+    }
+
+    .section-title {
+      margin: 36px 0 8px;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .section-title:first-child {
+      margin-top: 0;
+    }
+
+    .optional-note {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin: 18px 0 7px;
+      font-size: 0.95rem;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 15px;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .hint {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    button {
+      margin-top: 32px;
+      width: 100%;
+      padding: 15px;
+      background: var(--accent);
+      color: #0f172a;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: var(--accent-hover);
+    }
+
+    button:disabled {
+      background: #475569;
+      color: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    #status {
+      margin-top: 20px;
+      padding: 14px;
+      border-radius: 10px;
+      display: none;
+      font-weight: 500;
+    }
+
+    .success {
+      background: #064e3b;
+      color: #6ee7b7;
+      border: 1px solid #059669;
+    }
+
+    .error {
+      background: #450a0a;
+      color: #fca5a5;
+      border: 1px solid #dc2626;
+    }
+
+    .disclaimer {
+      margin-top: 24px;
+      padding: 16px;
+      background: #0f172a;
+      border-left: 4px solid #64748b;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Sri Lanka Hospitals Directory</h1>
+  <p class="subtitle">Add a public hospital / medical facility (data is saved to CSV)</p>
+
+  <div class="card">
+    <form id="hospitalForm">
+
+      <!-- Basic Info -->
+      <div class="section-title">Facility Information</div>
+
+      <label>Facility / Hospital Name *</label>
+      <input type="text" id="name" required placeholder="e.g. National Hospital of Sri Lanka">
+
+      <label>Province *</label>
+      <select id="province" required>
+        <option value="">Select Province</option>
+        <option>Western</option>
+        <option>Central</option>
+        <option>Southern</option>
+        <option>Northern</option>
+        <option>Eastern</option>
+        <option>North Western</option>
+        <option>North Central</option>
+        <option>Uva</option>
+        <option>Sabaragamuwa</option>
+      </select>
+
+      <label>District *</label>
+      <select id="district" required>
+        <option value="">Select District</option>
+        <option>Colombo</option>
+        <option>Gampaha</option>
+        <option>Kalutara</option>
+        <option>Kandy</option>
+        <option>Matale</option>
+        <option>Nuwara Eliya</option>
+        <option>Galle</option>
+        <option>Matara</option>
+        <option>Hambantota</option>
+        <option>Jaffna</option>
+        <option>Kilinochchi</option>
+        <option>Mannar</option>
+        <option>Vavuniya</option>
+        <option>Mullaitivu</option>
+        <option>Batticaloa</option>
+        <option>Ampara</option>
+        <option>Trincomalee</option>
+        <option>Kurunegala</option>
+        <option>Puttalam</option>
+        <option>Anuradhapura</option>
+        <option>Polonnaruwa</option>
+        <option>Badulla</option>
+        <option>Monaragala</option>
+        <option>Ratnapura</option>
+        <option>Kegalle</option>
+      </select>
+
+      <label>City / Town *</label>
+      <input type="text" id="city" required>
+
+      <!-- Contacts -->
+      <div class="section-title">Contact Information</div>
+      <p class="optional-note">
+        At least <strong>one</strong> of Primary Phone, Email or Website is required.
+      </p>
+
+      <label>Primary Contact Number</label>
+      <input type="text" id="primaryPhone" placeholder="e.g. 0112691111">
+
+      <label>Secondary Contact Number (Optional)</label>
+      <input type="text" id="secondaryPhone" placeholder="Optional">
+
+      <label>Email</label>
+      <input type="email" id="email" placeholder="e.g. info@hospital.lk">
+
+      <label>Website</label>
+      <input type="url" id="website" placeholder="e.g. https://www.hospital.lk">
+
+      <label>Address</label>
+      <textarea id="address" placeholder="Full address"></textarea>
+
+      <!-- Services & Doctors -->
+      <div class="section-title">Services & Doctors</div>
+
+      <label>Services Provided *</label>
+      <textarea id="services" required placeholder="e.g. Emergency, OPD, Cardiology, Maternity, ICU, Laboratory..."></textarea>
+      <div class="hint">List the main services available at this facility</div>
+
+      <label>Available Doctors (Optional)</label>
+      <textarea id="doctors" placeholder="e.g. Dr. A. Perera (Cardiologist), Dr. S. Fernando (Pediatrician)..."></textarea>
+
+      <label>Additional Notes (Optional)</label>
+      <textarea id="notes" placeholder="Any other public information"></textarea>
+
+      <!-- Optional Submitter Details -->
+      <div class="section-title">Your Details (Optional)</div>
+      <p class="optional-note">
+        Providing your personal details is completely optional.
+      </p>
+
+      <label>Your Name</label>
+      <input type="text" id="submitterName" placeholder="Optional">
+
+      <label>Your Contact Number</label>
+      <input type="text" id="submitterPhone" placeholder="Optional">
+
+      <label>Your Email</label>
+      <input type="email" id="submitterEmail" placeholder="Optional">
+
+      <div class="disclaimer">
+        <strong>Please note:</strong> All information submitted through this form (including any personal details you choose to provide) will be publicly available to everyone. 
+        We do not take any responsibility for the accuracy of the data or for any consequences arising from its use or publication.
+      </div>
+
+      <button type="submit" id="submitBtn">Submit Facility</button>
+    </form>
+
+    <div id="status"></div>
+  </div>
+
+  <script>
+    // ============ CONFIGURE THESE THREE VALUES ============
+    const GITHUB_USERNAME = "YOUR_USERNAME";
+    const REPO_NAME       = "YOUR_REPO";
+    const TOKEN           = "YOUR_FINE_GRAINED_TOKEN";   // Contents: Read and write
+    // ======================================================
+
+    const CSV_PATH = "data/hospitals.csv";
+    const form = document.getElementById("hospitalForm");
+    const statusEl = document.getElementById("status");
+    const submitBtn = document.getElementById("submitBtn");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      // Validation: at least one contact method required
+      const primaryPhone = document.getElementById("primaryPhone").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const website = document.getElementById("website").value.trim();
+
+      if (!primaryPhone && !email && !website) {
+        statusEl.className = "error";
+        statusEl.style.display = "block";
+        statusEl.textContent = "Please provide at least one contact method: Primary Phone, Email, or Website.";
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Saving...";
+      statusEl.style.display = "none";
+
+      try {
+        // 1. Get current file
+        const getRes = await fetch(
+          https://api.github.com/repos/\( {GITHUB_USERNAME}/ \){REPO_NAME}/contents/${CSV_PATH},
+          {
+            headers: {
+              Authorization: Bearer ${TOKEN},
+              Accept: "application/vnd.github+json"
+            }
+          }
+        );
+
+        if (!getRes.ok) throw new Error("Could not read the CSV file. Check path and token permissions.");
+
+        const fileData = await getRes.json();
+        const currentContent = atob(fileData.content);
+        const sha = fileData.sha;
+
+        // Helper to safely escape CSV values
+        const esc = (val) => "${(val || "").replace(/"/g, '""')}";
+
+        // 2. Prepare new row
+        const now = new Date().toISOString();
+        const row = [
+          esc(document.getElementById("name").value),
+          esc(document.getElementById("province").value),
+          esc(document.getElementById("district").value),
+          esc(document.getElementById("city").value),
+          esc(primaryPhone),
+          esc(document.getElementById("secondaryPhone").value),
+          esc(email),
+          esc(website),
+          esc(document.getElementById("address").value),
+          esc(document.getElementById("services").value),
+          esc(document.getElementById("doctors").value),
+          esc(document.getElementById("notes").value),
+          esc(document.getElementById("submitterName").value),
+          esc(document.getElementById("submitterPhone").value),
+          esc(document.getElementById("submitterEmail").value),
+          esc(now)
+        ].join(",");
+
+        const newContent = currentContent.trim() + "\n" + row;
+
+        // 3. Commit the updated file
+        const putRes = await fetch(
+          https://api.github.com/repos/\( {GITHUB_USERNAME}/ \){REPO_NAME}/contents/${CSV_PATH},
+          {
+            method: "PUT",
+            headers: {
+              Authorization: Bearer ${TOKEN},
+              Accept: "application/vnd.github+json",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              message: Add facility: ${document.getElementById("name").value},
+              content: btoa(unescape(encodeURIComponent(newContent))),
+              sha: sha
+            })
+          }
+        );
+
+        if (!putRes.ok) {
+          const err = await putRes.json();
+          throw new Error(err.message || "Failed to update file");
+        }
+
+        // Success
+        statusEl.className = "success";
+        statusEl.style.display = "block";
+        statusEl.textContent = "Facility added successfully!";
+        form.reset();
+
+      } catch (err) {
+        statusEl.className = "error";
+        statusEl.style.display = "block";
+        statusEl.textContent = "Error: " + err.message;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit Facility";
+      }
+    });
+  </script>
+</body>
+</html>
