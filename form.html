@@ -162,6 +162,11 @@
       background: var(--accent-hover);
     }
 
+    button[type="submit"]:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
     #clearBtn {
       background: #475569;
       color: white;
@@ -197,7 +202,6 @@
       color: #E0115F;
     }
 
-    /* Mobile improvements */
     @media (max-width: 600px) {
       h1 { font-size: 1.6rem; }
       .card { padding: 20px 16px; }
@@ -223,27 +227,41 @@
         <label>Facility / Hospital Name *</label>
         <input type="text" id="name" required placeholder="e.g. National Hospital of Sri Lanka">
 
+        <label>Category (Optional)</label>
+        <input type="text" id="category" placeholder="e.g. Mental Health, General Hospital">
+
+        <label>Type (Optional)</label>
+        <select id="facilityType">
+          <option value="">Select Type</option>
+          <option value="Government">Government</option>
+          <option value="NGO">NGO</option>
+          <option value="Private">Private</option>
+        </select>
+
         <label>Province *</label>
-      <select id="province" required>
-        <option value="">Select Province</option>
-        <option value="Western">Western Province</option>
-        <option value="Central">Central Province</option>
-        <option value="Southern">Southern Province</option>
-        <option value="Northern">Northern Province</option>
-        <option value="Eastern">Eastern Province</option>
-        <option value="North Western">North Western Province</option>
-        <option value="North Central">North Central Province</option>
-        <option value="Uva">Uva Province</option>
-        <option value="Sabaragamuwa">Sabaragamuwa Province</option>
-      </select>
+        <select id="province" required>
+          <option value="">Select Province</option>
+          <option value="Western">Western Province</option>
+          <option value="Central">Central Province</option>
+          <option value="Southern">Southern Province</option>
+          <option value="Northern">Northern Province</option>
+          <option value="Eastern">Eastern Province</option>
+          <option value="North Western">North Western Province</option>
+          <option value="North Central">North Central Province</option>
+          <option value="Uva">Uva Province</option>
+          <option value="Sabaragamuwa">Sabaragamuwa Province</option>
+        </select>
 
         <label>District *</label>
         <select id="district" required>
           <option value="">Select District</option>
         </select>
 
-        <label>City / Town *</label>
-        <input type="text" id="city" required>
+        <label>Nearest Town / City *</label>
+        <input type="text" id="city" required placeholder="e.g. Badulla">
+
+        <label>DS Division / Area (Optional)</label>
+        <input type="text" id="dsDivision" placeholder="e.g. Badulla, Hali-Ela">
 
         <label>Service Type *</label>
         <select id="serviceType" required>
@@ -269,22 +287,25 @@
         <input type="text" id="website" placeholder="www.hospital.lk">
         <div class="hint">Just type starting with www (no https:// needed)</div>
 
-        <label>Address</label>
+        <label>Full Address / Location (Optional)</label>
         <textarea id="address" placeholder="Full address"></textarea>
 
-        <div class="section-title">Services & Doctors</div>
+        <div class="section-title">Services &amp; Doctors</div>
 
-        <label>Services Provided *</label>
+        <label>Capabilities / Services Provided *</label>
         <textarea id="services" required placeholder="Emergency, OPD, Cardiology, Maternity..."></textarea>
 
-        <label>Available Doctors (Optional)</label>
+        <label>Available Hours (Optional)</label>
+        <input type="text" id="availableHours" placeholder="e.g. Mon-Fri 8am-4pm; ETU 24h">
+
+        <label>Available Doctors / Key Staff (Optional)</label>
         <textarea id="doctors" placeholder="Dr. Name (Specialty)"></textarea>
 
-        <label>Additional Notes (Optional)</label>
+        <label>Additional Notes / Remarks (Optional)</label>
         <textarea id="notes"></textarea>
 
         <div class="section-title">Your Details (Optional)</div>
-        <p class="optional-note">Completely optional</p>
+        <p class="optional-note">Completely optional — if filled, these will be saved to the CSV</p>
 
         <label>Your Name</label>
         <input type="text" id="submitterName">
@@ -296,11 +317,10 @@
         <input type="email" id="submitterEmail">
 
         <div class="disclaimer">
-          <strong>Please note:</strong> All information submitted (including any personal details) will be publicly available. 
+          <strong>Please note:</strong> All facility information submitted will be publicly available.
           We do not take responsibility for the accuracy of the data.
         </div>
 
-        <!-- Checkbox only needed when user fills personal details -->
         <div class="checkbox-group" id="agreeBox" style="display: none;">
           <input type="checkbox" id="agreeCheck">
           <label for="agreeCheck" style="margin: 0; font-weight: normal;">
@@ -320,10 +340,24 @@
     // ========== CONFIGURE THESE ==========
     const GITHUB_USERNAME = "Manchi95";
     const REPO_NAME       = "Psychiatric-Care-Facilities";
-    const TOKEN           = "";
+    const BRANCH          = "main";
+    const CSV_PATH        = "directory.csv";
+    // Token is NOT hardcoded (GitHub auto-revokes public tokens).
+    // It is asked once and stored in this browser only.
     // =====================================
 
-    const CSV_PATH = "data/hospitals.csv";
+    let githubToken = localStorage.getItem("githubToken") || "";
+
+    function getToken() {
+      if (!githubToken) {
+        githubToken = prompt("Enter your GitHub access token (repo scope):");
+        if (githubToken) {
+          localStorage.setItem("githubToken", githubToken.trim());
+          githubToken = githubToken.trim();
+        }
+      }
+      return githubToken;
+    }
 
     // Theme Toggle
     const themeBtn = document.getElementById("themeBtn");
@@ -336,7 +370,6 @@
       }
     };
 
-    // Province & District
     // Province → Districts
     const provinceDistricts = {
       "Western": ["Colombo", "Gampaha", "Kalutara"],
@@ -350,7 +383,6 @@
       "Sabaragamuwa": ["Ratnapura", "Kegalle"]
     };
 
-    // District → Province (reverse)
     const districtToProvince = {};
     for (const [province, districts] of Object.entries(provinceDistricts)) {
       districts.forEach(d => {
@@ -361,7 +393,6 @@
     const provinceSelect = document.getElementById("province");
     const districtSelect = document.getElementById("district");
 
-    // Fill all districts at the beginning
     function populateAllDistricts() {
       districtSelect.innerHTML = '<option value="">Select District</option>';
       const allDistricts = Object.values(provinceDistricts).flat().sort();
@@ -373,7 +404,6 @@
       });
     }
 
-    // Filter districts when province changes
     provinceSelect.addEventListener("change", function () {
       const selectedProvince = this.value;
       const currentDistrict = districtSelect.value;
@@ -388,24 +418,20 @@
           districtSelect.appendChild(option);
         });
 
-        // Keep the district if it still belongs to the new province
         if (currentDistrict && provinceDistricts[selectedProvince].includes(currentDistrict)) {
           districtSelect.value = currentDistrict;
         }
       } else {
-        // If no province selected, show all districts again
         populateAllDistricts();
       }
     });
 
-    // When district changes → auto select correct province
     districtSelect.addEventListener("change", function () {
       const selectedDistrict = this.value;
       if (selectedDistrict && districtToProvince[selectedDistrict]) {
-        provinceSelect.value = districtToProvince[selectedDistrict];
-
-        // Also filter the district list to match the province
         const correctProvince = districtToProvince[selectedDistrict];
+        provinceSelect.value = correctProvince;
+
         districtSelect.innerHTML = '<option value="">Select District</option>';
         provinceDistricts[correctProvince].forEach(district => {
           const option = document.createElement("option");
@@ -417,7 +443,6 @@
       }
     });
 
-    // Initial load - show all districts
     populateAllDistricts();
 
     // Show/Hide agreement checkbox based on Your Details
@@ -439,7 +464,6 @@
     phoneInput.oninput = checkPersonalDetails;
     emailInput.oninput = checkPersonalDetails;
 
-    // Validation helpers
     function isValidPhone(phone) {
       if (!phone) return true;
       return /^0\d{9}$/.test(phone);
@@ -448,6 +472,40 @@
     function isValidEmail(email) {
       if (!email) return true;
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function esc(val) {
+      return '"' + String(val || "").replace(/"/g, '""') + '"';
+    }
+
+    function utf8ToBase64(text) {
+      const bytes = new TextEncoder().encode(text);
+      let binary = "";
+      for (let i = 0; i < bytes.length; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      return btoa(binary);
+    }
+
+    function base64ToUtf8(base64) {
+      const binary = atob(base64.replace(/\n/g, ""));
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      return new TextDecoder().decode(bytes);
+    }
+
+    // Next No = max existing No + 1
+    function nextNumber(csvText) {
+      const lines = csvText.split(/\r?\n/).filter(l => l.trim().length > 0);
+      let maxNo = 0;
+      for (let i = 1; i < lines.length; i++) {
+        const first = lines[i].split(",")[0].replace(/^"|"$/g, "").trim();
+        const n = parseInt(first, 10);
+        if (!isNaN(n) && n > maxNo) maxNo = n;
+      }
+      return maxNo + 1;
     }
 
     const form = document.getElementById("hospitalForm");
@@ -464,7 +522,6 @@
       const submitterPhone = document.getElementById("submitterPhone").value.trim();
       const submitterEmail = document.getElementById("submitterEmail").value.trim();
 
-      // Personal details agreement check
       if (agreeBox.style.display === "flex" && !document.getElementById("agreeCheck").checked) {
         showError("Please tick the agreement box since you entered personal details.");
         return;
@@ -497,79 +554,160 @@
         return;
       }
 
+      const token = getToken();
+      if (!token) {
+        showError("GitHub token is required to save data.");
+        return;
+      }
+
       submitBtn.disabled = true;
       submitBtn.textContent = "Saving...";
       statusEl.style.display = "none";
 
       try {
-        const getRes = await fetch("https://api.github.com/repos/" + GITHUB_USERNAME + "/" + REPO_NAME + "/contents/" + CSV_PATH, {
+        const fileUrl =
+          "https://api.github.com/repos/" +
+          GITHUB_USERNAME + "/" + REPO_NAME +
+          "/contents/" + CSV_PATH +
+          "?ref=" + BRANCH;
+
+        const getRes = await fetch(fileUrl, {
+          method: "GET",
           headers: {
-            "Authorization": "Bearer " + TOKEN,
-            "Accept": "application/vnd.github+json"
+            "Authorization": "Bearer " + token,
+            "Accept": "application/vnd.github+json",
+            "X-GitHub-Api-Version": "2022-11-28"
           }
         });
 
-        if (!getRes.ok) throw new Error("Could not read the CSV file. Check username, repo name and token.");
-
-        const fileData = await getRes.json();
-        const currentContent = atob(fileData.content);
-        const sha = fileData.sha;
-
-        function esc(val) {
-          return '"' + (val || "").replace(/"/g, '""') + '"';
+        if (!getRes.ok) {
+          if (getRes.status === 401 || getRes.status === 403) {
+            localStorage.removeItem("githubToken");
+            githubToken = "";
+            throw new Error("Token invalid or missing permission. Enter a new token with repo scope.");
+          }
+          const errText = await getRes.text();
+          throw new Error("Could not read directory.csv (" + getRes.status + "): " + errText);
         }
 
-        const now = new Date().toISOString();
+        const fileData = await getRes.json();
+        let currentContent = base64ToUtf8(fileData.content);
+        const sha = fileData.sha;
 
+        // Ensure header has the submitter + agreement columns
+        const EXTRA_HEADERS = ",Submitter Name,Submitter Contact,Submitter Email,Agreement";
+        const lines = currentContent.split(/\r?\n/);
+        if (lines.length > 0 && lines[0].indexOf("Agreement") === -1) {
+          lines[0] = lines[0].replace(/\r$/, "") + EXTRA_HEADERS;
+          currentContent = lines.join("\n");
+        }
+
+        // Ensure trailing newline
+        if (currentContent.length > 0 && !currentContent.endsWith("\n")) {
+          currentContent += "\r\n";
+        }
+
+        const no = nextNumber(currentContent);
+        const provinceVal = document.getElementById("province").value;
+        const provinceForCsv = provinceVal ? (provinceVal + " Province") : "";
+
+        // Helper: blank facility fields → "No data available"
+        function fillBlank(val) {
+          const v = (val || "").trim();
+          return v === "" ? "No data available" : v;
+        }
+
+        // Submitter fields: blank → "NA"
+        const submitterNameVal = document.getElementById("submitterName").value.trim();
+        const submitterPhoneVal = submitterPhone;
+        const submitterEmailVal = submitterEmail;
+
+        const hasSubmitterData =
+          submitterNameVal !== "" ||
+          submitterPhoneVal !== "" ||
+          submitterEmailVal !== "";
+
+        // Agreement column: "Ticked" if checkbox was required and checked, else "NA"
+        let agreementVal = "NA";
+        if (hasSubmitterData) {
+          agreementVal = document.getElementById("agreeCheck").checked ? "Ticked" : "NA";
+        }
+
+        // Column order matches directory.csv + new columns at the end:
+        // No, Facility Name, Category, Type, Free / Paid, Primary contact, Secandory contact,
+        // Email, Provice, District, Nearest Town / City, DS Division / Area,
+        // Full Address / Location Detail, Capabilities / Services, Available Hours,
+        // Available Doctors / Key Staff, Web site, Other Valuable Points / Notes, HTML code,
+        // Submitter Name, Submitter Contact, Submitter Email, Agreement
         const row = [
-          esc(document.getElementById("name").value),
-          esc(document.getElementById("province").value),
-          esc(document.getElementById("district").value),
-          esc(document.getElementById("city").value),
-          esc(document.getElementById("serviceType").value),
-          esc(primaryPhone),
-          esc(secondaryPhone),
-          esc(email),
-          esc(website),
-          esc(document.getElementById("address").value),
-          esc(document.getElementById("services").value),
-          esc(document.getElementById("doctors").value),
-          esc(document.getElementById("notes").value),
-          esc(document.getElementById("submitterName").value),
-          esc(submitterPhone),
-          esc(submitterEmail),
-          esc(now)
+          esc(no),
+          esc(fillBlank(document.getElementById("name").value)),
+          esc(fillBlank(document.getElementById("category").value)),
+          esc(fillBlank(document.getElementById("facilityType").value)),
+          esc(fillBlank(document.getElementById("serviceType").value)),
+          esc(fillBlank(primaryPhone)),
+          esc(fillBlank(secondaryPhone)),
+          esc(fillBlank(email)),
+          esc(fillBlank(provinceForCsv)),
+          esc(fillBlank(document.getElementById("district").value)),
+          esc(fillBlank(document.getElementById("city").value)),
+          esc(fillBlank(document.getElementById("dsDivision").value)),
+          esc(fillBlank(document.getElementById("address").value)),
+          esc(fillBlank(document.getElementById("services").value)),
+          esc(fillBlank(document.getElementById("availableHours").value)),
+          esc(fillBlank(document.getElementById("doctors").value)),
+          esc(fillBlank(website)),
+          esc(fillBlank(document.getElementById("notes").value)),
+          esc("No data available"),  // HTML code
+          esc(submitterNameVal === "" ? "NA" : submitterNameVal),
+          esc(submitterPhoneVal === "" ? "NA" : submitterPhoneVal),
+          esc(submitterEmailVal === "" ? "NA" : submitterEmailVal),
+          esc(agreementVal)
         ].join(",");
 
-        const newContent = currentContent.trim() + "\n" + row;
+        const newContent = currentContent + row + "\r\n";
 
-        const putRes = await fetch("https://api.github.com/repos/" + GITHUB_USERNAME + "/" + REPO_NAME + "/contents/" + CSV_PATH, {
-          method: "PUT",
-          headers: {
-            "Authorization": "Bearer " + TOKEN,
-            "Accept": "application/vnd.github+json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            message: "Add facility: " + document.getElementById("name").value,
-            content: btoa(unescape(encodeURIComponent(newContent))),
-            sha: sha
-          })
-        });
+        const putRes = await fetch(
+          "https://api.github.com/repos/" + GITHUB_USERNAME + "/" + REPO_NAME + "/contents/" + CSV_PATH,
+          {
+            method: "PUT",
+            headers: {
+              "Authorization": "Bearer " + token,
+              "Accept": "application/vnd.github+json",
+              "Content-Type": "application/json",
+              "X-GitHub-Api-Version": "2022-11-28"
+            },
+            body: JSON.stringify({
+              message: "Add facility: " + document.getElementById("name").value.trim(),
+              content: utf8ToBase64(newContent),
+              sha: sha,
+              branch: BRANCH
+            })
+          }
+        );
 
         if (!putRes.ok) {
-          const err = await putRes.json();
-          throw new Error(err.message || "Failed to update file");
+          const err = await putRes.json().catch(() => ({}));
+          if (putRes.status === 401 || putRes.status === 403) {
+            localStorage.removeItem("githubToken");
+            githubToken = "";
+            throw new Error("Token does not have permission to update directory.csv.");
+          }
+          if (putRes.status === 409) {
+            throw new Error("File changed during submission. Please press Submit again.");
+          }
+          throw new Error(err.message || "Failed to update directory.csv");
         }
 
         statusEl.className = "success";
         statusEl.style.display = "block";
-        statusEl.textContent = "Facility added successfully!";
+        statusEl.textContent = "✓ Facility added successfully! (No. " + no + ")";
         form.reset();
-        districtSelect.innerHTML = '<option value="">Select District</option>';
+        populateAllDistricts();
         agreeBox.style.display = "none";
 
       } catch (err) {
+        console.error(err);
         showError("Error: " + err.message);
       } finally {
         submitBtn.disabled = false;
@@ -583,13 +721,13 @@
       statusEl.textContent = msg;
     }
 
-    // Clear button
     document.getElementById("clearBtn").onclick = function() {
       form.reset();
-      districtSelect.innerHTML = '<option value="">Select District</option>';
+      populateAllDistricts();
       agreeBox.style.display = "none";
       statusEl.style.display = "none";
     };
   </script>
+
 </body>
 </html>
