@@ -149,12 +149,13 @@
 
     h1 {
       font-size: 2.55rem;
+      font-weight: 700;
       margin: 0;
     }
 
     .subtitle {
       opacity: 0.85;
-      font-size: 0.95rem;
+      font-size: 1rem;
     }
 
     /* Phone styles */
@@ -182,14 +183,174 @@
       color: #999;
       margin-top: 3px;
     }
+
+/* Theme toggle – same idea as form.html */
+    .theme-toggle {
+      text-align: right;
+      margin-bottom: 12px;
+      padding: 0 12px;
+    }
+
+    .theme-toggle button {
+      background: #1e1e1e;
+      color: #e0e0e0;
+      border: 1px solid #444;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .theme-toggle button:hover {
+      background: #333;
+      border-color: #666;
+    }
+
+    body.light .theme-toggle button {
+      background: #ffffff;
+      color: #1e293b;
+      border: 1px solid #cbd5e1;
+    }
+
+    body.light .theme-toggle button:hover {
+      background: #f1f5f9;
+    }
+
+    /* Light theme overrides for main page */
+    body.light {
+      background-color: #f1f5f9;
+      color: #1e293b;
+    }
+
+    body.light .header {
+      background: linear-gradient(135deg, #e2e8f0, #f8fafc);
+      color: #0f172a;
+      border-bottom: 1px solid #cbd5e1;
+    }
+
+    body.light .filter-card,
+    body.light .table-card {
+      background-color: #ffffff;
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    body.light label { color: #334155; }
+
+    body.light .form-select {
+      background-color: #ffffff;
+      color: #1e293b;
+      border: 1px solid #cbd5e1;
+    }
+
+    body.light .btn-outline-secondary {
+      color: #334155;
+      border-color: #94a3b8;
+    }
+
+    body.light .btn-outline-secondary:hover {
+      background-color: #e2e8f0;
+      color: #0f172a;
+    }
+
+    body.light .table {
+      --bs-table-bg: #ffffff;
+      --bs-table-striped-bg: #f8fafc;
+      --bs-table-hover-bg: #f1f5f9;
+      --bs-table-color: #1e293b !important;
+      --bs-table-border-color: #e2e8f0;
+      color: #1e293b !important;
+    }
+
+    body.light .table th {
+      color: #0f172a !important;
+      background-color: #f1f5f9 !important;
+      border-color: #e2e8f0 !important;
+    }
+
+    body.light .table td {
+      color: #1e293b !important;
+      border-color: #e2e8f0 !important;
+    }
+
+    body.light .dataTables_wrapper,
+    body.light .dataTables_wrapper .dataTables_length,
+    body.light .dataTables_wrapper .dataTables_filter,
+    body.light .dataTables_wrapper .dataTables_info,
+    body.light .dataTables_wrapper .dataTables_paginate {
+      color: #475569 !important;
+    }
+
+    body.light .dataTables_wrapper .dataTables_filter input,
+    body.light .dataTables_length select {
+      background-color: #ffffff !important;
+      color: #1e293b !important;
+      border: 1px solid #cbd5e1 !important;
+    }
+
+    body.light .page-link {
+      background-color: #ffffff !important;
+      border-color: #cbd5e1 !important;
+      color: #334155 !important;
+    }
+
+    body.light .page-item.active .page-link {
+      background-color: #0d9488 !important;
+      border-color: #0d9488 !important;
+      color: #fff !important;
+    }
+
+    body.light .phone-primary { color: #0369a1; }
+    body.light .phone-secondary,
+    body.light .e-mail,
+    body.light .web-site { color: #64748b; }
+
+    /* Bottom “Add a Facility” button */
+    .bottom-add-wrap {
+      text-align: center;
+      padding: 28px 16px 40px;
+    }
+
+    .btn-add-facility {
+      display: inline-block;
+      padding: 10px 25px;
+      background: #14b8a6;
+      color: #0f172a !important;
+      font-weight: 800;
+      font-size: 1.2rem;
+      border-radius: 10px;
+      text-decoration: none;
+      border: none;
+      box-shadow: 0 4px 14px rgba(20, 184, 166, 0.4);
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-add-facility:hover {
+      background: #0d9488;
+      color: #0f172a !important;
+      transform: translateY(-1px);
+    }
+    .creator {
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 0.8rem;
+    }
   </style>
 </head>
 <body>
+<div class="theme-toggle">
+    <button type="button" id="themeBtn">Switch to Light Mode</button>
+  </div>
 
-  <div class="header text-center">
+<div class="header text-center">
     <div class="container">
       <h1>Psychiatric Care Facilities in Sri Lanka</h1>
-      <div class="subtitle" style="margin-top:15px">Free public directory • Last Updated 31/08/2026</div>
+      <div class="subtitle" style="margin-top:15px; margin-bottom:15px">Free public directory • Last Updated 31/08/2026</div>
+
+      <div class="header-actions">
+        <a href="form.html" class="btn-add-facility">+ Add a Facility</a>
+      </div>
     </div>
   </div>
 
@@ -698,12 +859,14 @@
       </table>
     </div>
 
-    <p class="text-center text-muted mt-4 small" style="color: #888 !important;">
+  <div class="container">
+    <p class="creator" style="color: #888 !important;">
       Data is for public information. Please call to confirm details.
     </p>
-    <p class="text-center text-muted mt-4 small" style="color: #888 !important;">
+    <p class="creator" style="color: #888 !important;">
       Powered by AR Industries
     </p>
+  </div>
   </div>
 
   <!-- Scripts -->
@@ -849,5 +1012,23 @@
 
     });
   </script>
+<script>
+  (function () {
+    const btn = document.getElementById("themeBtn");
+    if (!btn) return;
+
+    if (localStorage.getItem("directoryTheme") === "light") {
+      document.body.classList.add("light");
+      btn.textContent = "Switch to Dark Mode";
+    }
+
+    btn.onclick = function () {
+      document.body.classList.toggle("light");
+      const isLight = document.body.classList.contains("light");
+      btn.textContent = isLight ? "Switch to Dark Mode" : "Switch to Light Mode";
+      localStorage.setItem("directoryTheme", isLight ? "light" : "dark");
+    };
+  })();
+</script>
 </body>
 </html>

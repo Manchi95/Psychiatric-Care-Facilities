@@ -44,7 +44,7 @@
     }
 
     h1 {
-      font-size: 1.9rem;
+      font-size: 2.9rem;
       text-align: center;
       margin-bottom: 6px;
     }
@@ -53,9 +53,14 @@
       color: var(--muted);
       text-align: center;
       margin-bottom: 24px;
-      font-size: 0.95rem;
+      font-size: 1.2rem;
     }
-
+    .creator {
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 0.8rem;
+    }
     .theme-toggle {
       text-align: right;
       margin-bottom: 16px;
@@ -228,7 +233,7 @@
         <input type="text" id="name" required placeholder="e.g. National Hospital of Sri Lanka">
 
         <label>Category (Optional)</label>
-        <input type="text" id="category" placeholder="e.g. Mental Health, General Hospital">
+        <input type="text" id="category" placeholder="e.g. Mental Health, GBV Support, LGBTIQ Support, Counseling, Rehabilitation, Child Mental Health....">
 
         <label>Type (Optional)</label>
         <select id="facilityType">
@@ -293,10 +298,10 @@
         <div class="section-title">Services &amp; Doctors</div>
 
         <label>Capabilities / Services Provided *</label>
-        <textarea id="services" required placeholder="Emergency, OPD, Cardiology, Maternity..."></textarea>
+        <textarea id="services" required placeholder="Emergency, Carer Association, Acute Psychiatry Uni, STI/HIV testing, counseling availability, Counseling and referral..."></textarea>
 
         <label>Available Hours (Optional)</label>
-        <input type="text" id="availableHours" placeholder="e.g. Mon-Fri 8am-4pm; ETU 24h">
+        <input type="text" id="availableHours" placeholder="e.g. Daily 7:00am-7:00pm; Mon-Fri 8am-4pm; 24/7 open">
 
         <label>Available Doctors / Key Staff (Optional)</label>
         <textarea id="doctors" placeholder="Dr. Name (Specialty)"></textarea>
@@ -305,16 +310,16 @@
         <textarea id="notes"></textarea>
 
         <div class="section-title">Your Details (Optional)</div>
-        <p class="optional-note">Completely optional — if filled, these will be saved to the CSV</p>
+        <p class="optional-note">Completely optional — if filled, these will be saved to the directory</p>
 
         <label>Your Name</label>
-        <input type="text" id="submitterName">
+        <input type="text" id="submitterName" placeholder="Mr. George">
 
         <label>Your Contact Number</label>
-        <input type="text" id="submitterPhone" maxlength="10">
+        <input type="text" id="submitterPhone" maxlength="10" placeholder="0777777777">
 
         <label>Your Email</label>
-        <input type="email" id="submitterEmail">
+        <input type="email" id="submitterEmail" placeholder="youremail@abc.lk">
 
         <div class="disclaimer">
           <strong>Please note:</strong> All facility information submitted will be publicly available.
@@ -334,6 +339,18 @@
 
       <div id="status"></div>
     </div>
+
+  <div class="container">
+    <p class="creator" style="color: #888 !important;">
+       
+    </p>
+    <p class="creator" style="color: #888 !important;">
+      Data is for public information. Please call to confirm details.
+    </p>
+    <p class="creator" style="color: #888 !important;">
+      Powered by AR Industries
+    </p>
+  </div>
   </div>
 
   <script>
@@ -630,7 +647,7 @@
         // Agreement column: "Ticked" if checkbox was required and checked, else "NA"
         let agreementVal = "NA";
         if (hasSubmitterData) {
-          agreementVal = document.getElementById("agreeCheck").checked ? "Ticked" : "NA";
+          agreementVal = document.getElementById("agreeCheck").checked ? "Check box Ticked!" : "NA";
         }
 
         // Column order matches directory.csv + new columns at the end:
