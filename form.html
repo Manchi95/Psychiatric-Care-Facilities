@@ -223,6 +223,9 @@
 
     <h1>Sri Lanka Hospitals Directory</h1>
     <p class="subtitle">Add a public hospital / medical facility</p>
+    <p class="subtitle" style="margin-top: 8px;">
+      <a href="index.html" style="color: var(--accent); font-weight: 600; text-decoration: none;">← Back to directory</a>
+    </p>
 
     <div class="card">
       <form id="hospitalForm">
@@ -279,8 +282,8 @@
         <p class="optional-note">At least <strong>one</strong> of Primary Phone, Email or Website is required.</p>
 
         <label>Primary Contact Number</label>
-        <input type="text" id="primaryPhone" placeholder="0112691111" maxlength="10">
-        <div class="hint">Must start with 0 and be exactly 10 digits</div>
+        <input type="text" id="primaryPhone" placeholder="055-5555555 or 1926" maxlength="12">
+        <div class="hint">Digits and "-" only. 10-digit numbers saved as 055-5555555. Short helplines: 3 or 4 digits (e.g. 1926).</div>
 
         <label>Secondary Contact Number (Optional)</label>
         <input type="text" id="secondaryPhone" placeholder="Optional" maxlength="10">
@@ -316,7 +319,7 @@
         <input type="text" id="submitterName" placeholder="Mr. George">
 
         <label>Your Contact Number</label>
-        <input type="text" id="submitterPhone" maxlength="10" placeholder="0777777777">
+        <input type="text" id="submitterPhone" maxlength="12" placeholder="077-7777777">
 
         <label>Your Email</label>
         <input type="email" id="submitterEmail" placeholder="youremail@abc.lk">
@@ -375,13 +378,15 @@
 
     // Theme Toggle
     const themeBtn = document.getElementById("themeBtn");
+    if (localStorage.getItem("directoryTheme") === "light") {
+      document.body.classList.add("light");
+      themeBtn.textContent = "Switch to Dark Mode";
+    }
     themeBtn.onclick = function() {
       document.body.classList.toggle("light");
-      if (document.body.classList.contains("light")) {
-        themeBtn.textContent = "Switch to Dark Mode";
-      } else {
-        themeBtn.textContent = "Switch to Light Mode";
-      }
+      const isLight = document.body.classList.contains("light");
+      themeBtn.textContent = isLight ? "Switch to Dark Mode" : "Switch to Light Mode";
+      localStorage.setItem("directoryTheme", isLight ? "light" : "dark");
     };
 
     // Province → Districts
@@ -478,9 +483,28 @@
     phoneInput.oninput = checkPersonalDetails;
     emailInput.oninput = checkPersonalDetails;
 
+    // Phone rules:
+    // - Only digits and "-" allowed
+    // - Digit count 3 or 4 → short helpline (keep as-is)
+    // - Digit count 10 → format as XXX-XXXXXXX for CSV
+    function phoneDigits(phone) {
+      return String(phone || "").replace(/-/g, "");
+    }
+
     function isValidPhone(phone) {
       if (!phone) return true;
-      return /^0\d{9}$/.test(phone);
+      if (!/^[0-9-]+$/.test(phone)) return false;
+      const d = phoneDigits(phone);
+      return d.length === 3 || d.length === 4 || d.length === 10;
+    }
+
+    function formatPhoneForCsv(phone) {
+      if (!phone) return "";
+      const d = phoneDigits(phone);
+      if (d.length === 10) {
+        return d.slice(0, 3) + "-" + d.slice(3);
+      }
+      return d; // 3 or 4 digit helplines
     }
 
     function isValidEmail(email) {
@@ -547,17 +571,21 @@
       }
 
       if (primaryPhone && !isValidPhone(primaryPhone)) {
-        showError("Primary Phone must start with 0 and be exactly 10 digits.");
+        showError("Primary Phone: use only digits and \"-\". Allowed lengths: 3, 4, or 10 digits (e.g. 1926 or 055-5555555).");
         return;
       }
       if (secondaryPhone && !isValidPhone(secondaryPhone)) {
-        showError("Secondary Phone must start with 0 and be exactly 10 digits.");
+        showError("Secondary Phone: use only digits and \"-\". Allowed lengths: 3, 4, or 10 digits.");
         return;
       }
       if (submitterPhone && !isValidPhone(submitterPhone)) {
-        showError("Your Contact Number must start with 0 and be exactly 10 digits.");
+        showError("Your Contact Number: use only digits and \"-\". Allowed lengths: 3, 4, or 10 digits.");
         return;
       }
+
+      const primaryPhoneCsv = formatPhoneForCsv(primaryPhone);
+      const secondaryPhoneCsv = formatPhoneForCsv(secondaryPhone);
+      const submitterPhoneCsv = formatPhoneForCsv(submitterPhone);
 
       if (email && !isValidEmail(email)) {
         showError("Please enter a valid Email address.");
@@ -633,12 +661,12 @@
 
         // Submitter fields: blank → "NA"
         const submitterNameVal = document.getElementById("submitterName").value.trim();
-        const submitterPhoneVal = submitterPhone;
+        const submitterPhoneVal = submitterPhoneCsv;
         const submitterEmailVal = submitterEmail;
 
         const hasSubmitterData =
           submitterNameVal !== "" ||
-          submitterPhoneVal !== "" ||
+          submitterPhone !== "" ||
           submitterEmailVal !== "";
 
         // Agreement column: "Ticked" if checkbox was required and checked, else "NA"
@@ -659,8 +687,8 @@
           esc(fillBlank(document.getElementById("category").value)),
           esc(fillBlank(document.getElementById("facilityType").value)),
           esc(fillBlank(document.getElementById("serviceType").value)),
-          esc(fillBlank(primaryPhone)),
-          esc(fillBlank(secondaryPhone)),
+          esc(fillBlank(primaryPhoneCsv)),
+          esc(fillBlank(secondaryPhoneCsv)),
           esc(fillBlank(email)),
           esc(fillBlank(provinceForCsv)),
           esc(fillBlank(document.getElementById("district").value)),
